@@ -1,0 +1,76 @@
+.headerContainer {
+  display: flex;
+}
+.header {
+  width: 100%;
+  height: 60px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #003366;
+}
+.logoImg {
+  display: flex;
+  align-items: center;
+  margin: 5px 0px;
+}
+.header ul {
+  list-style: none;
+  margin: 20px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 5px;
+  font-family: var(--font-fira-sans);
+}
+.header a {
+  text-decoration: none;
+  color: var(--white-100);
+}
+.header a:link,
+.header a:active {
+  color: var(--white-100);
+  background-color: var(--dark-blue);
+  padding: 20px;
+}
+.header a:hover {
+  background-color: var(--blue-100);
+  color: var(--white-100);
+  padding: 20px;
+}
+
+.contolbtns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchButton {
+  padding: 5px;
+}
+.joinbtn {
+  width: 90px;
+  height: 39px;
+  border-radius: 5px;
+  background-color:#CCD1D9;
+  color:#003366;
+  font-size: 15px;
+  font-family: var(--font-fira-sans);
+}
+
+.selectLanguge{
+  height: 38px;
+  width: 60px;
+  border-radius: 5px;
+  background-color:#CCD1D9;
+  color:#003366;
+  font-size: 15px;
+  font-family: var(--font-fira-sans);
+  text-align: center;
+}
+.selectLanguge option{
+  height: 38px;
+  padding:5px;
+  border-radius: 0px;
+}
