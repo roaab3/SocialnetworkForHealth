@@ -1,0 +1,50 @@
+.covid19AndHealthcare {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  line-height: 140%;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  color: var(--blue-100);
+}
+.medical {
+  text-transform: uppercase;
+}
+.medicalDiseasesTreatmentsContainer {
+  position: absolute;
+  top: 68px;
+  left: 20px;
+  line-height: 22px;
+}
+.button4,
+.button8 {
+  border-radius: var(--br-9xs);
+  border: 1px solid var(--color-whitesmoke-200);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-3xs) var(--padding-sm);
+}
+.searchButton {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+}
+.postsUnloggeduser {
+  position: relative;
+  background-color: var(--cccccc);
+  width: 100%;
+  height: 1476px;
+  text-align: left;
+  font-size: var(--font-size-base);
+  color: var(--blue-100);
+  font-family: var(--font-fira-sans);
+}
