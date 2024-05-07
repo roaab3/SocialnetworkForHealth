@@ -3,18 +3,22 @@ import styles from "./editOptions.module.css";
 import SecurityPage from "../securityPage/securityPage";
 import EditProfile from "../editProfile/editProfile";
 import { IUser } from "../../../interfaces/users";
+import { useTranslation } from "react-i18next";
 
+
+//Compnent that display settings user's Profile
 const EditOptions = ({ user }: { user: IUser }) => {
+  const { t, i18n } = useTranslation();
   const [selectedComponent, setSelectedComponent] = useState<
     "editProfile" | "changePassword"
   >("editProfile");
-
+//hanlde choose which compnent to display
   const handleTabClick = (tab: "editProfile" | "changePassword") => {
     setSelectedComponent(tab);
   };
 
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <div className={styles.container}>
         <div className={styles.card}>
           <div className={styles.optionsContainer}>
@@ -25,7 +29,7 @@ const EditOptions = ({ user }: { user: IUser }) => {
                 }
                 onClick={() => handleTabClick("editProfile")}
               >
-                Edit Profile
+                {t("editProfile")}
               </li>
               <li
                 className={
@@ -35,7 +39,7 @@ const EditOptions = ({ user }: { user: IUser }) => {
                 }
                 onClick={() => handleTabClick("changePassword")}
               >
-                Change Password
+                {t("changePassword")}
               </li>
             </ul>
           </div>

@@ -1,8 +1,13 @@
+.mainContainer{
+  margin: auto;
+}
 .container {
   display: flex;
-  margin: 14px 150px;
+ margin-top: 15px;
+  
 }
 .card {
+  margin: auto;
   width: 970px;
   height: 38px;
   flex-shrink: 0;

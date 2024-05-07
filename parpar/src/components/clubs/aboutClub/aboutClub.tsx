@@ -1,15 +1,18 @@
 import React from "react";
 import { IClubs } from "../../../interfaces/clubs";
 import styles from "./aboutClub.module.css";
+import { useTranslation } from "react-i18next";
 
-const aboutClub = ({ club }: { club: IClubs }) => {
+//compnent that display more ditals about club
+const AboutClub = ({ club }: { club: IClubs }) => {
+  const { t, i18n } = useTranslation();
   return (
     <div>
       <div className={styles.container}>
         <div className={styles.aboutClub}>
-          <div className={styles.title}>About</div>
+          <div className={styles.title}>{t("about")}</div>
           <div className={styles.description}>{club.description}</div>
-          <div className={styles.title}>Interests</div>
+          <div className={styles.title}>{t("interests")}</div>
           <div className={styles.interestsContent}>
             <ul>
               {club.domain?.map((domain, index, array) => (
@@ -22,8 +25,8 @@ const aboutClub = ({ club }: { club: IClubs }) => {
             </ul>
           </div>
           <div className={styles.dateContainer}>
-            <div className={styles.registed}>Registed</div>
-            <div className={styles.date}>date</div>
+            <div className={styles.registed}>{t("registed")}</div>
+            <div className={styles.date}>{"02-05-2024"}</div>
           </div>
         </div>
       </div>
@@ -31,4 +34,4 @@ const aboutClub = ({ club }: { club: IClubs }) => {
   );
 };
 
-export default aboutClub;
+export default AboutClub;

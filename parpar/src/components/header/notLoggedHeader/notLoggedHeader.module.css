@@ -53,24 +53,24 @@
   width: 90px;
   height: 39px;
   border-radius: 5px;
-  background-color:#CCD1D9;
+  background-color:#e2dede;;
   color:#003366;
   font-size: 15px;
   font-family: var(--font-fira-sans);
 }
 
-.selectLanguge{
+.selectLanguge {
   height: 38px;
   width: 60px;
   border-radius: 5px;
-  background-color:#CCD1D9;
-  color:#003366;
+  background-color: #e2dede;;
+  color: #003366;
   font-size: 15px;
   font-family: var(--font-fira-sans);
   text-align: center;
 }
-.selectLanguge option{
+.selectLanguge option {
   height: 38px;
-  padding:5px;
+  padding: 5px;
   border-radius: 0px;
 }

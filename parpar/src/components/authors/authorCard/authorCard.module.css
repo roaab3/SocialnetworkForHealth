@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 15px;
 }
 .card {
   width: 772px;
@@ -15,20 +16,28 @@
   border-radius: 4px;
   padding: 8px;
   background: var(--White-100, #ffffff);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 .cardContainer {
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
-.profileContainer {
+.profileContainer,.userImaeg {
+  display: flex;
   width: 70px;
   height: 70px;
   padding: 5px;
   border-radius: 50%;
-  background-color: #f1e9e9;
+  background-color: var(--color-lightsteelblue);
   align-items: center;
   margin: 15px 0px;
+  justify-content: space-around;
+  font-size: 30px;
+  color: #ffffff;
+}
+.userImaeg{
+  padding: 0px;
 }
 .userName {
   color: var(--Dark-Blue, #036);
@@ -40,6 +49,7 @@
   line-height: 18px;  
 }
 .point {
+  display: flex;
   width: 36px;
   height: 24px;
   flex-shrink: 0;
@@ -47,29 +57,36 @@
   font-family: "Cantata One";
   font-size: 16px;
   font-style: normal;
-  margin: 44px 0px;
+  margin: auto;
+  justify-content: center;
+  justify-content: flex-start;
   font-weight: 400;
   line-height: 140%; 
+  
 }
 .pointContainer {
   display: flex;
   flex-direction: row;
-  gap: 6px;
+  gap: 4px;
 }
 .pointIcon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  margin: 42px 0px;
-
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--yellow-100, #fc6);
 }
 .btn {
   padding: 20px;
   align-items: center;
+  margin: auto;
+  margin: 15px 0px;
 }
 .btnSub {
-  margin: 18px 5px;
+  /* margin: 18px 5px; */
   width: 130px;
   height: 36px;
   border-radius: 4px;

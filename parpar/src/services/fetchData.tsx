@@ -30,6 +30,9 @@ import {
   addPostToClubUrl,
   updatePointsNumberUrl,
   removeFriendUrl,
+  deletePostfromClubUrl,
+  updatePostForUserUrl,
+  updatePostForClubUrl,
 } from "../constants";
 import { IUser } from "../interfaces/users";
 import { current } from "@reduxjs/toolkit";
@@ -43,26 +46,42 @@ enum PostType {
 
 // Users fetch data
 export const registerUser = async (user: any) => {
-  const args = {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    username: user.username,
-    email: user.email,
-    password: user.password,
-  };
+  let args;
+
+  if (user.password) {
+    // Registering with username/password
+    args = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email,
+      password: user.password,
+    };
+  } else {
+    // Registering with Google account (no password provided)
+    args = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.email.substring(0, user.email.indexOf("@")), // Generate username from email
+      email: user.email,
+      googleId: user.googleID,
+    };
+  }
 
   const response = await axios.post(registerUrl, args);
-
+  console.log(response);
   if (response.data.status === "failure") {
     toast.error(response.data.message, {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    return false;
   } else {
     toast.success("Added successfully!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    return true;
   }
 };
 
@@ -101,30 +120,48 @@ export const fetchAllUsersData = async () => {
     });
   }
 };
-
+// Define environment variables for development and production
+const developmentBackendUrl1 = "http://localhost:3001/auth/getUserByID";
+const productionBackendUrl1 = "https://us-central1-parpar-server.cloudfunctions.net/app/auth/getUserByID";
 export const getUserByID = async (userId: string) => {
+ 
   try {
-    const response = await axios.get(`${getUserByIDUrl}?userId=${userId}`);
-    return response.data;
+    const dynamicgetUserByIDUrl = getUserByIDUrl(userId);
+    console.log(dynamicgetUserByIDUrl);
+    // Use appropriate URL based on environment
+    const backendUrl = process.env.NODE_ENV === "production" ? productionBackendUrl1 : developmentBackendUrl1;
+    //const response = await axios.get(`${backendUrl}?userId=${userId}`);
+    const response = await axios.get(dynamicgetUserByIDUrl);
+    console.log(response);
     console.log(response.data);
+    return response.data;
+    
   } catch (error) {
     console.error("Error fetching user:", error);
     throw new Error("Failed to fetch user data");
   }
 };
+// Define environment variables for development and production
+const developmentBackendUrl = "http://localhost:3001/auth/getUserByUsername";
+const productionBackendUrl = "https://us-central1-parpar-server.cloudfunctions.net/app/auth/getUserByUsername";
 
 export const getUserByUsername = async (username: string) => {
   try {
-    const response = await axios.get(
-      `${getUserByUsernameUrl}?username=${username}`
-    );
-    return response.data;
+    // Use appropriate URL based on environment
+    const backendUrl = process.env.NODE_ENV === "production" ? productionBackendUrl : developmentBackendUrl;
+    console.log(username);
+  
+    // Make request using backendUrl
+    const response = await axios.get(`${backendUrl}?username=${username}`);
+    
     console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching user:", error);
     throw new Error("Failed to fetch user data");
   }
 };
+
 
 export const updateProfile = async (userId: any, updatedUser: any) => {
   const dynamicUpdateProfileUrl = updateProfileUrl(userId);
@@ -136,11 +173,13 @@ export const updateProfile = async (userId: any, updatedUser: any) => {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    return false;
   } else {
     toast.success("Updated successfully!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    return true;
   }
 };
 
@@ -166,11 +205,10 @@ export const addFriend = async (username: string, friendId: string) => {
 };
 
 export const removeFriend = async (friendID: any, username: string) => {
-
   const response = await axios.delete(removeFriendUrl, {
     data: { id: friendID, username: username },
   });
- 
+
   if (response.data.status === "failure") {
     toast.error(response.data.message, {
       position: "bottom-center",
@@ -211,22 +249,28 @@ export const createPost = async (post: any) => {
     club: post.club,
     type: post.type,
     tags: post.tags,
-    publicationDate: post.publicationDate,
     author: post.author,
   };
-
+  console.log(args);
   try {
-    const response = await axios.post(createPostUrl, args);
+    const response = await axios.post(createPostUrl, JSON.stringify(args), {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    
     toast.success("Added successfully!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    console.log(response.data);
     return response.data;
   } catch {
     toast.error("Error!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    return;
   }
 };
 
@@ -257,7 +301,9 @@ export const fetchPostsDataForUser = async (username: string) => {
   }
 };
 
-export const deletePostByID = async (postID: any, username: string) => {
+export const deletePostByID = async (postID: string, username: any) => {
+  console.log(postID);
+  console.log(username);
   const response = await axios.delete(deletePostByIDUrl, {
     data: { id: postID, username: username },
   });
@@ -275,6 +321,7 @@ export const deletePostByID = async (postID: any, username: string) => {
   }
 };
 
+
 export const updateLikesNumber = async (title: string, likes: number) => {
   const args = {
     title: title,
@@ -282,6 +329,21 @@ export const updateLikesNumber = async (title: string, likes: number) => {
   };
 
   const response = await axios.post(updateLikesNumberUrl, args);
+
+  if (response.data.status === "failure") {
+    toast.error(response.data.message, {
+      position: "bottom-center",
+      hideProgressBar: true,
+    });
+  }
+};
+export const updatePostForUser = async (username: string, id: string) => {
+  const args = {
+   id: id,
+    username: username,
+  };
+
+  const response = await axios.post(updatePostForUserUrl, args);
 
   if (response.data.status === "failure") {
     toast.error(response.data.message, {
@@ -323,7 +385,7 @@ export const deleteComment = async (commentID: any, postID: string) => {
       hideProgressBar: true,
     });
   } else {
-    toast.success("Deleted successfully!", {
+    toast.success("Comment Deleted successfully!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
@@ -346,16 +408,17 @@ export const createClub = async (club: any) => {
     const response = await axios.post(createClubUrl, args);
     console.log(response);
 
-    toast.success("Added successfully!", {
+    toast.success("Created club successfully!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
-    return response.data;
+    return true;
   } catch {
     toast.error("Error!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
+    return false;
   }
 };
 
@@ -416,7 +479,10 @@ export const getClubByID = async (clubId: string) => {
   }
 };
 
-export const clubsSubscribtions = async (username: string, clubsSubscribtion: any) => {
+export const clubsSubscribtions = async (
+  username: string,
+  clubsSubscribtion: any
+) => {
   const args = {
     username: username,
     clubsSubscribtion: clubsSubscribtion,
@@ -430,26 +496,28 @@ export const clubsSubscribtions = async (username: string, clubsSubscribtion: an
       hideProgressBar: true,
     });
   } else {
-    toast.success("Added successfully!", {
+    toast.success("Added Subscribtion!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
   }
 };
 
-export const deleteClubSubscribtions = async (clubID: any, username: string) => {
-
+export const deleteClubSubscribtions = async (
+  clubID: any,
+  username: string
+) => {
   const response = await axios.delete(deleteClubSubscribtionsUrl, {
     data: { id: clubID, username: username },
   });
- 
+
   if (response.data.status === "failure") {
     toast.error(response.data.message, {
       position: "bottom-center",
       hideProgressBar: true,
     });
   } else {
-    toast.success("Deleted successfully!", {
+    toast.success("Deleted Subscribtion!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
@@ -462,8 +530,19 @@ export const addPostToClub = async (name: string, posts: any) => {
     name: name,
     posts: posts,
   };
-
   const response = await axios.post(addPostToClubUrl, args);
+
+};
+
+export const deletePostfromClub = async (idClub: string,  posts: any) => {
+  const args = {
+    id: idClub,
+    posts: posts,
+  };
+  console.log(idClub);
+  console.log(posts);
+  
+  const response = await axios.delete( deletePostfromClubUrl, {data: args});
 
   if (response.data.status === "failure") {
     toast.error(response.data.message, {
@@ -471,13 +550,25 @@ export const addPostToClub = async (name: string, posts: any) => {
       hideProgressBar: true,
     });
   } else {
-    toast.success("Added successfully!", {
+    toast.success("deleted Post successfully!", {
       position: "bottom-center",
       hideProgressBar: true,
     });
   }
 };
+// this function update Club post array after adding comment or like to post 
+export const updatePostForClub = async (name: string,  postID: any) => {
+  const args = {
+    name: name,
+    id: postID,
+  };
+  console.log(name);
+  console.log(postID);
+  
+  const response = await axios.post( updatePostForClubUrl,args);
 
+
+};
 export const updateClub = async (clubId: any, updatedClub: any) => {
   const dynamicUpdateClubUrl = updateClubUrl(clubId);
 

@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
-import axios from "axios";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/login";
@@ -13,21 +11,10 @@ import UserPage from "./pages/[user_id]/userPage";
 import EditUserProfile from "./pages/[user_id]/editUserProfile";
 import AddClub from "./pages/addClub";
 import EditClubSettings from "./pages/[club_id]/editClubSettings"
+import AddPost from "./pages/addPost";
+
 
 function App() {
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/");
-      console.log(response.data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
   return (
     <>
       <BrowserRouter>
@@ -41,7 +28,7 @@ function App() {
           <Route path="/authors" element={<Authors />} />
           <Route path="/authors/:userId" element={<UserPage />} />
           <Route path="/editProfile/:userId" element={<EditUserProfile />} />
-          <Route path="/addPost" element={<Authors />} />
+          <Route path="/addPost" element={<AddPost />} />
           <Route path="/addClub" element={<AddClub />} />
           <Route path="/editClubSettings/:clubId" element={<EditClubSettings />} />
 

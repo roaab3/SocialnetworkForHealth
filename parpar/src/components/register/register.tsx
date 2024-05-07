@@ -7,10 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { FormData } from "../../interfaces/users";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { GoogleLogin, googleLogout, useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import axios from "axios";
+import { useTranslation } from "react-i18next";
 interface Params {
   firstName: string;
   lastName: string;
@@ -19,13 +16,8 @@ interface Params {
   password: string;
   confirmPassword: string;
 }
-interface IGoogle {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-}
 
+//function check valid inputs
 export const validInputs = (
   firstName: string,
   lastName: string,
@@ -71,7 +63,7 @@ export const validInputs = (
   }
   return false;
 };
-
+//handle clicking on register  button
 export const onRegisterClicked = async (registerProps: Params) => {
   const { firstName, lastName, username, email, password, confirmPassword } =
     registerProps;
@@ -86,7 +78,7 @@ export const onRegisterClicked = async (registerProps: Params) => {
     )
   )
     return false;
-
+//schema for stroge password
   const schema = new PasswordValidator();
   schema
     .is()
@@ -108,20 +100,29 @@ export const onRegisterClicked = async (registerProps: Params) => {
       position: "bottom-center",
       hideProgressBar: true,
     });
-    return schema.validate(password, { details: true });
+    return schema.validate(password, { details: false });
   }
   try {
-    registerUser(registerProps);
-    return true;
+    const response = registerUser(registerProps);
+    return response;
   } catch (error) {
     return false;
   }
 };
-
+//Component to display register page
 const Register = () => {
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState("eng");
+  const handleChangeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLanguage = e.target.value;
+    localStorage.setItem("language", newLanguage);
+    i18n.changeLanguage(newLanguage);
+    setSelectedLanguage(newLanguage);
+  };
   const [IsClicked, setIsclick] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
+  //initiaze form data
   const [formData, setFormData] = useState<FormData>({
     username: "",
     firstName: "",
@@ -130,7 +131,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-
+// function handle changing input in the form
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -140,24 +141,15 @@ const Register = () => {
       [name]: value,
     }));
   };
+// handle tregaer register click then move to login page
+  const onRegister = async (fromData: Params) => {
+    const result = await onRegisterClicked(fromData);
+    if (result) navigate("/login");
+  };
 
-  function onChooselangClick() {
-    setIsclick(!IsClicked);
-  }
   const onBackButtonClick = useCallback(() => {
     navigate("/");
   }, [navigate]);
-  const handleMouseOver = () => {
-    setShowPopup(!showPopup);
-  };
-
-  
-
-  // log out function to log the user out of google and set the profile array to null
-  // const logOut = () => {
-  //   googleLogout();
-  //   setProfile([]);
-  // };
 
   return (
     <>
@@ -169,11 +161,20 @@ const Register = () => {
         </div>
         <div className={styles.container}>
           <div className={styles.btncontainer}>
-            <div className={styles.btnback} onClick={onChooselangClick}>
-              {IsClicked ? "Eng" : "HEB"}
+           
+            <div>
+              <select
+                name="selectedLanguage"
+                className={styles.selectLanguge}
+                onChange={handleChangeLanguage}
+              >
+                <option value="eng">ENG</option>
+                <option value="heb">HEB</option>
+              </select>
             </div>
+            
             <div className={styles.btnback} onClick={onBackButtonClick}>
-              Back
+             {t("back")}
             </div>
           </div>
           <div className={styles.centeritem}>
@@ -186,7 +187,7 @@ const Register = () => {
             <div className={styles.form}>
               <div className={styles.nameLabels}>
                 <div className={styles.fname}>
-                  <label className={styles.titleM}>First name</label>
+                  <label className={styles.titleM}>{t("firstname")}</label>
                   <br />
                   <input
                     type="text"
@@ -196,7 +197,7 @@ const Register = () => {
                   />
                 </div>
                 <div className={styles.lname}>
-                  <label className={styles.titleM}>Last name</label>
+                  <label className={styles.titleM}>{t("lastname")}</label>
                   <br />
                   <input
                     type="text"
@@ -207,23 +208,7 @@ const Register = () => {
                 </div>
               </div>
               <div className={styles.username}>
-                <div
-                  className={styles.usernameandIcon}
-                  onClick={handleMouseOver}
-                >
-                  <label>Username </label>
-                  <HelpOutlineIcon
-                    sx={[{ fontSize: 13 }, { color: "#71717a" }]}
-                  />
-                  {showPopup && (
-                    <div className={styles.popupUser}>
-                      <p>
-                        Username must be between 6 to 20 characters long and
-                        contain only letters, numbers, underscores, or hyphens.
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <label>{t("username")}</label>
                 <input
                   type="text"
                   className={styles.input}
@@ -232,7 +217,7 @@ const Register = () => {
                 />
               </div>
               <div className={styles.username}>
-                <label>Email</label>
+                <label>{t("email")}</label>
                 <br />
                 <input
                   type="text"
@@ -242,7 +227,7 @@ const Register = () => {
                 />
               </div>
               <div className={styles.username}>
-                <label>Password</label>
+                <label>{t("password")}</label>
                 <br />
                 <input
                   type="password"
@@ -252,7 +237,7 @@ const Register = () => {
                 />
               </div>
               <div className={styles.username}>
-                <label>Confirm Password</label>
+                <label>{t("confirm_password")}</label>
                 <br />
                 <input
                   type="password"
@@ -267,39 +252,17 @@ const Register = () => {
                 <span>{` and Google `}</span>
                 <span className={styles.privacyPolicy}>Terms of use</span>
               </div>
-              <div className={styles.Im18years}>
-                <input type="checkbox" />
-                I'm over 18 years old
-              </div>
             </div>
             <button
               className={styles.buttonRegister}
-              onClick={() => onRegisterClicked(formData)}
+              onClick={() => onRegister(formData)}
             >
-              <div className={styles.createAccount}>Create Account</div>
+              <div className={styles.createAccount}>{t("create_Acc")}</div>
             </button>
             <div className={styles.registeItem}>
-              <div>Or you can join with</div>
-              <div className={styles.socialContainer}>
-                <img
-                  src="/assets/socialsGoogle.png"
-                  className={styles.imgItem}
-                  // onClick={() => login()}
-                />
-                <img
-                  src="/assets/socialsfacebook.png"
-                  className={styles.imgItem}
-                />
-                <img
-                  src="/assets/socialstwitter.png"
-                  className={styles.imgItem}
-                />
-              </div>
-            </div>
-            <div>
-              Already a member?
+              {t("already_a_member")}  ?
               <Link to="/login" className={styles.signInlink}>
-                Sign in :)
+                {t("sign_in")} :)
               </Link>
             </div>
           </div>

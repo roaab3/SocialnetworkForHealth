@@ -4,16 +4,16 @@ import { getUserByID } from "../../services/fetchData";
 import { setUserPage } from "../../redux/Slicers";
 import { useParams } from "react-router";
 import LoggedUserHeader from "../../components/header/loggedUser/loggedUserHeader";
-import EditProfile from "../../components/editProfileForUser/editProfile/editProfile";
-import SecurityPage from "../../components/editProfileForUser/securityPage/securityPage";
 import EditOptions from "../../components/editProfileForUser/editOptions/editOptions";
+import NotLoggedHeader from "../../components/header/notLoggedHeader/notLoggedHeader";
 
+// Dislay edit user page (dynamic page)
 const EditUserProfile = () => {
   const dispatch = useDispatch();
   const { userId } = useParams<{ userId: string }>();
   const userData = useSelector((state: any) => state.currentUser.userPage);
-
-  // Fetch user data
+  let currentUser = localStorage.getItem("username");
+  // Fetch user data by id 
   useEffect(() => {
     const fetchUserData = async () => {
       if (userId) {
@@ -30,7 +30,7 @@ const EditUserProfile = () => {
 
   return (
     <>
-      {/* <LoggedUserHeader /> */}
+      {currentUser ? <LoggedUserHeader user={userData} /> : <NotLoggedHeader />}
       <EditOptions user={userData} />
     </>
   );

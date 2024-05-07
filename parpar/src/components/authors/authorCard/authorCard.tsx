@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
+import i18n from "../../../i18n";
 import {
   addFriend,
   fetchAllUsersData,
@@ -11,11 +12,13 @@ import {
 import { setAllUsers, setUserId, setUserPage } from "../../../redux/Slicers";
 import { IUser } from "../../../interfaces/users";
 import styles from "./authorCard.module.css";
+import { useTranslation } from "react-i18next";
 
+// Component that displays authors in the website
 const Authors = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { t, i18n } = useTranslation();
   const [currentUser, setCurrentUser] = useState<string | null>(
     localStorage.getItem("username")
   );
@@ -36,6 +39,7 @@ const Authors = () => {
     const fetchUserData = async () => {
       if (currentUser) {
         try {
+          //get all information about currentUser
           const userData = await getUserByUsername(currentUser);
           dispatch(setUserPage(userData));
           // Initialize subscriptions state with user's subscription data
@@ -77,10 +81,13 @@ const Authors = () => {
       } catch (error) {
         console.error("Error updating club subscription:", error);
       }
+    } else {
+      navigate("/login");
     }
   };
 
   const renderActionButton = (user: IUser) => {
+    //display editprofile
     if (user.username === currentUser) {
       return (
         <button
@@ -91,18 +98,20 @@ const Authors = () => {
         </button>
       );
     } else {
+      //display subscribe button
       return (
         <button
           className={styles.btnSub}
           onClick={() => onSubscribeClick(user._id)}
         >
-          {subscriptions[user._id] ? "Unsubscribe" : "Subscribe"}
+          {subscriptions[user._id] ? t("unsubscribe") : t("subscribe")}
         </button>
       );
     }
   };
 
-  const buttonOpenUser = (userId: string) => {
+  const buttonOpenUser = (userId: string, username: string) => {
+    localStorage.setItem("VisitOtherUser", username);
     navigate(`/authors/${userId}`);
   };
 
@@ -111,21 +120,35 @@ const Authors = () => {
       {usersData?.map((user: IUser) => (
         <div className={styles.card} key={user._id}>
           <div className={styles.cardContainer}>
-            <div className={styles.profileContainer}></div>
+            <div >
+              {user?.imageUrl ? (
+                <img
+                  className={styles.userImaeg}
+                  src={
+                    typeof user.imageUrl === "string"
+                      ? user.imageUrl
+                      : URL.createObjectURL(new Blob([user.imageUrl]))
+                  }
+                />
+              ) : (
+                <div className={styles.profileContainer}>
+                {user.username.slice(0, 2).toUpperCase()}
+                </div>
+              )}
+            </div>
             <div
               className={styles.userName}
-              onClick={() => buttonOpenUser(user._id)}
+              onClick={() => buttonOpenUser(user._id, user.username)}
             >
               {user.username}
             </div>
           </div>
           <div className={styles.pointContainer}>
             <div className={styles.pointIcon}>
-              <StarIcon /> {user.points?.toString()}
+              <StarIcon />
             </div>
-
-            <div className={styles.point}></div>
-            <div className={styles.btn}>
+            <div className={styles.point}>{user.points}</div>
+            <div>
               <div className={styles.btn}>{renderActionButton(user)}</div>
             </div>
           </div>

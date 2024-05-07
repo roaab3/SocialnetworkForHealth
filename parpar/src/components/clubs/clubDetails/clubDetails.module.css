@@ -10,6 +10,7 @@
   background: var(--White-100, #ffffff);
   padding: 15px;
   margin-top: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 .profileData {
   display: flex;
@@ -29,6 +30,7 @@
   align-items: center;
   margin: 15px 0px;
 }
+
 .clubRating,
 .clubFollowers {
   flex-direction: column;
@@ -38,6 +40,7 @@
   display: flex;
   width: 40px;
   height: 14px;
+  padding: 10px;
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
@@ -94,7 +97,7 @@
   line-height: 22px; 
 }
 .clubType {
-  color: var(--Main-4, #521a1a);
+  color: var(--White-100, #867c7c);
   font-family: "Fira Sans";
   font-size: 16px;
   font-style: normal;
@@ -121,7 +124,7 @@
   line-height: 16px;
 }
 .aboutClub li {
-  padding: 15px;
+  padding: 10px;
 }
 .aboutClub a {
   text-decoration: none;
@@ -145,5 +148,23 @@
 .activeItem {
   color: var(--Dark-Blue, #036);
   border-bottom: 2px solid #036;
-
+}
+.imagePro ,.imageProfile{
+  display: flex;
+  width: 80px;
+  height: 80px;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: var(--color-lightsteelblue);
+  color: #ffffff;
+  align-items: center;
+  margin: 15px 15px;
+  font-size: 40px;
+  align-content:center ;
+  justify-content: space-around;
+}
+.imageProfile{
+  padding: 0px;
+  width: 85px;
+  height: 85px;
 }

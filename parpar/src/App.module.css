@@ -40,7 +40,7 @@
 }
 .postsUnloggeduser {
   position: relative;
-  background-color: var(--cccccc);
+  background-color: #e2dede;
   width: 100%;
   height: 1476px;
   text-align: left;

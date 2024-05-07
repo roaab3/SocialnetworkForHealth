@@ -18,6 +18,7 @@ import { IPosts } from "../../../interfaces/posts";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddComment from "../../comments/addComment/addComment";
+import { useTranslation } from "react-i18next";
 
 // Component to display all the posts
 const Posts = () => {
@@ -30,7 +31,37 @@ const Posts = () => {
   const postData = useSelector((state: any) => state.posts.allPosts);
   const userData = useSelector((state: any) => state.currentUser.userPage);
   const points = useSelector((state: any) => state.currentUser.points);
+  const pointForPost = 5;
+  const [authorImages, setAuthorImages] = useState<{ [key: string]: string }>(
+    {}
+  );
 
+  // Fetch user data for each post author and store profile image URLs
+  useEffect(() => {
+    const fetchAuthorData = async () => {
+      const images: { [key: string]: string } = {};
+      for (const post of postData || []) {
+        if (post.author) {
+          try {
+            const userData = await getUserByUsername(post.author);
+            if (userData.imageUrl) {
+              images[post.author] = userData.imageUrl;
+            }
+          } catch (error) {
+            console.error("Error fetching author data:", error);
+          }
+        }
+      }
+      setAuthorImages(images);
+    };
+    fetchAuthorData();
+  }, [postData]);
+  //change language
+  const { t, i18n } = useTranslation();
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+  //fatch data about currentUser by his username
   useEffect(() => {
     const fetchUserData = async () => {
       if (currentUser) {
@@ -48,6 +79,7 @@ const Posts = () => {
   const [openCommentPostId, setOpenCommentPostId] = useState<string | null>(
     null
   );
+  //to open comment section!
   const handleCommentClick = (postId: string) => {
     setOpenCommentPostId(postId);
   };
@@ -63,22 +95,35 @@ const Posts = () => {
     });
   };
 
-  if (userData.type === "Moderator") typeModerator = userData.type;
+  // handle delete posts from the main page
+  const deletePostClick = (postId: string, username: any) => {
+    if (currentUser) {
+      deletePostByID(postId, username).then((res) => {
+        window.location.reload();
+        if (userData.type === "Moderator")
+          updatePointsNumber(username, userData.points - pointForPost).then(
+            (res) => {
+              dispatch(setPointsNumber(points - pointForPost));
+            }
+          );
+      });
+    }
+  };
 
-  // check if working!!!!
-  // const deletePostClick = (postId: string, username: any) => {
-  //   if (currentUser) {
-  //     deletePostByID(postId, username).then((res) => {
-  //       window.location.reload();
-  //       if (typeModerator) {
-  //         updatePointsNumber(username, userData.points - 5).then((res) => {
-  //           dispatch(setPointsNumber(points - 5));
-  //         });
-  //       }
-  //     });
-  //   }
-  // };
-
+  //display profile image
+  const renderProfileImage = (author: string) => {
+    const imageUrl = authorImages[author];
+    if (imageUrl) {
+      return <img src={imageUrl} className={styles.imageProfile} />;
+    } else {
+      //display subscribe button
+      return (
+        <div className={styles.imagePro}>
+          {author.slice(0, 2).toUpperCase()}
+        </div>
+      );
+    }
+  };
   return (
     <div>
       <div className={styles.postlist}>
@@ -87,18 +132,28 @@ const Posts = () => {
             <div className={styles.container}>
               <div className={styles.nameContainer}>
                 <div className={styles.title}>{post.title}</div>
-                {/* <div>
-                  {(currentUser == post.author || typeModerator) && (
+              </div>
+              <div className={styles.containerInfo}>
+                <div className={styles.accountInfo}>
+                  <div>{post?.author && renderProfileImage(post?.author)}</div>
+                  <div className={styles.username}>{post.author}</div>
+                  <div className={styles.publicDate}>
+                    {post.publicationDate.toString().split("T")[0]}
+                  </div>
+                </div>
+                <div>
+                  {(currentUser === post.author ||
+                    userData.type === "Moderator") && (
                     <button
-                      className={styles.btnSub}
+                      className={styles.btndelete}
                       onClick={() => deletePostClick(post._id, post.author)}
                     >
-                      Delete post
+                      {t("Delete post")}
                     </button>
                   )}
-                </div> */}
+                </div>
               </div>
-              <div className={styles.accountInfo}>
+              <div>
                 {post.imageUrl && (
                   <img
                     src={
@@ -107,23 +162,7 @@ const Posts = () => {
                         : URL.createObjectURL(post.imageUrl)
                     }
                     alt="Post Image"
-                    className={styles.imagePro}
-                  />
-                )}
-
-                <div className={styles.username}>{post.author}</div>
-                <div className={styles.publicDate}>{post.publicationDate}</div>
-              </div>
-              <div className={styles.postImg}>
-                {post.imageUrl && (
-                  <img
-                    src={
-                      typeof post.imageUrl === "string"
-                        ? post.imageUrl
-                        : URL.createObjectURL(post.imageUrl)
-                    }
-                    alt="Post Image"
-                    className={styles.imagePro}
+                    className={styles.postImg}
                   />
                 )}
               </div>

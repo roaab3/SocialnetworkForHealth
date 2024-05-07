@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-wrap: nowrap;
-  padding: 10px;
+
 }
 .partImg {
   display: flex;
@@ -138,4 +138,15 @@
 }
 .joinNowlink{
   color: var(--dark-blue);
+}
+.selectLanguge{
+  margin: 5px;
+  width: 100px;
+  height: 40px;
+  border-radius: 5px ;
+  background-color: #ededed;
+  border: 0 #ededed;
+  text-align: center;
+  padding: 10px;
+
 }

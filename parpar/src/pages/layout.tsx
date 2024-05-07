@@ -1,25 +1,21 @@
 import Posts from "../components/posts/post/posts";
-import PostFilter from "../components/posts/postFilter/postFilter";
 import NotLoggedHeader from "../components/header/notLoggedHeader/notLoggedHeader";
 import ActiveUsers from "../components/activeUsers/activeUsers";
 import styles from "./layout.module.css";
-import FindSpecialist from "../components/findSpecialist/findSpecialist";
 import LoggedUserHeader from "../components/header/loggedUser/loggedUserHeader";
-import NewPost from "../components/posts/newPost/newPost";
 import { setUserPage } from "../redux/Slicers";
 import { getUserByUsername } from "../services/fetchData";
 import { useEffect } from "react";
-import AddClub from "./addClub";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
 import ActiveClubs from "../components/activeClubs/activeClubs";
 
+//Display main page of the website
 const Layout = () => {
   const dispatch = useDispatch();
   let currentUser = localStorage.getItem("username");
-
+  let language = localStorage.getItem("language");
   const userData = useSelector((state: any) => state.currentUser.userPage);
-
+  //fatech logged user data by username
   useEffect(() => {
     const fetchUserData = async () => {
       if (currentUser) {
@@ -43,18 +39,13 @@ const Layout = () => {
            <NotLoggedHeader /> 
        )} 
         <div className={styles.container}>
-          <Posts />
+          <div  className={styles.postContainer}><Posts /></div>
           <div className={styles.activecontainer}>
             <ActiveUsers />
             <ActiveClubs />
           </div>
         </div>
       </div>
-      {/* <PostFilter /> */}
-      {/* <FindSpecialist /> */}
-
-      {/* <NewPost/> */}
-      {/* <AddClub/> */}
     </div>
   );
 };

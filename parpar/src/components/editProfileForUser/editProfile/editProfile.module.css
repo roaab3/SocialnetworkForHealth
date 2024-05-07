@@ -1,10 +1,11 @@
 .container {
   display: flex;
-  margin: 3px 150px;
+ 
+  margin-top: 20px;
 }
 .card {
+  margin: auto;
   width: 970px;
-  height: 1300px;
   flex-shrink: 0;
   border-radius: 4px;
   padding: 10px;
@@ -38,6 +39,12 @@
   display: flex;
   flex-direction: row;
   padding: 60px;
+  align-items: center;
+  gap:15px
+}
+.image{
+  height: 50px;
+  width: 50px;
 }
 .userImage {
   display: flex;
@@ -45,10 +52,13 @@
   height: 100px;
   justify-content: center;
   align-items: center;
+  text-align: center;
   flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px dashed #DEE0E2;
 }
 .uploadPhotoContainer {
-  width: 129px;
+  width: 250px;
   height: 44px;
   flex-shrink: 0;
   border-radius: 4px;

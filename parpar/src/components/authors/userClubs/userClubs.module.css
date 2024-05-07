@@ -1,67 +1,80 @@
 .container {
-    width: 775px;
-    margin: 10px 150px;;
-  }
-  .card {
-    width: 932px;
-    height: 110px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    margin: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 10px;
-  }
-  .clubInfo {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
-  }
-  .clubImg {
-    width: 65px;
-    height: 65px;
-    padding: 5px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    align-items: center;
-  }
-  .clubdata {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    padding: 5px;
-    color: var(--blue-100);
-    font-family: var(--font-fira-sans);
-    font-size: 25px;
-  }
-  .members {
-    font-size: var(--font-size-sm);
-    color: var(--main-4);
-  }
-  .btn {
-    padding: 20px;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-  }
-  .btnSub {
-    margin: 20px 5px;
-    width: 130px;
-    height: 36px;
-    border-radius: 4px;
-    font-size: 18px;
-    font-family: "Times New Roman", Times, serif;
-    color: #ffffff;
-    background-color: var(--dark-blue);
-    cursor: pointer;
-  }
-  .icons {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    justify-content: center;
-    padding: 5px;
-  }
-  
+  position: relative;
+  width: 775px;
+  margin: auto;
+  margin-top: 20px;
+}
+.card {
+  position: relative;
+  width: 932px;
+  height: 110px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  margin: auto;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.clubInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+.clubImg,.clubImaeg {
+  display: flex;
+  width: 65px;
+  height: 65px;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: var(--color-lightsteelblue);
+  align-items: center;
+  justify-content: space-around;
+  font-size: 42px;
+  color: #ffffff;
+}
+.clubImaeg{
+  padding: 0px;
+  width:70px;
+  height: 70px;
+}
+.clubdata {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 5px;
+  color: var(--blue-100);
+  font-family: var(--font-fira-sans);
+  font-size: 20px;
+}
+.members {
+  font-size: var(--font-size-sm);
+  color: var(--main-4);
+}
+.btn {
+  padding: 20px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+.btnSub {
+  margin: 20px 5px;
+  width: 130px;
+  height: 36px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: #ffffff;
+  background-color: var(--dark-blue);
+  cursor: pointer;
+}
+.icons {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: center;
+  padding: 5px;
+}

@@ -21,7 +21,7 @@ export interface IPostResult {
     club: string;
     type: PostType;
     tags: Array<string>;
-    publicationDate: String;
+    publicationDate: Date;
     author: string | null;
     likes: number;
     comments: Array<IComments>
@@ -34,7 +34,6 @@ export interface IPostResult {
     club: string;
     type: PostType;
     tags: Array<string>;
-    publicationDate: String;
     author: string;
   }
   

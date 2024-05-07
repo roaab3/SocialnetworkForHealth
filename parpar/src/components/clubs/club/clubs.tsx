@@ -12,15 +12,18 @@ import {
   getUserByUsername,
   deleteClubSubscribtions,
 } from "../../../services/fetchData";
+import { useTranslation } from "react-i18next";
 
 // Component to display all clubs
 const Club = () => {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let currentUser: string | null = localStorage.getItem("username");
   const clubData = useSelector((state: any) => state.clubs.allClubs);
   const userData = useSelector((state: any) => state.currentUser.userPage);
   console.log(clubData);
+  //handle subscriptions clicking
   const [subscriptions, setSubscriptions] = useState<{
     [clubId: string]: boolean;
   }>({});
@@ -80,27 +83,16 @@ const Club = () => {
       } catch (error) {
         console.error("Error updating club subscription:", error);
       }
+    } else {
+      navigate("/login");
     }
   };
 
-  const renderActionButton = (club: IClubs) => {
-    if (club.author === currentUser) {
-      return (
-        <button className={styles.btnSub} onClick={() => navigate(`/addPost`)}>
-          Add Post
-        </button>
-      );
-    } else {
-      return (
-        <button
-          className={styles.btnSub}
-          onClick={() => onSubscribeClick(club)}
-        >
-          {subscriptions[club._id] ? "Unsubscribe" : "Subscribe"}
-        </button>
-      );
-    }
-  };
+  //moving to new post page with the club name
+  function moveToAddPost(name: string): void {
+    localStorage.setItem("choosingClub", name);
+    navigate(`/addPost`);
+  }
 
   return (
     <div className={styles.container}>
@@ -109,10 +101,10 @@ const Club = () => {
           <div className={styles.clubInfo}>
             <div>
               {!club.imageUrl ? (
-                <div className={styles.clubImg}></div>
+                <div className={styles.clubImg}>{club.name.slice(0,1).toUpperCase()}</div>
               ) : (
                 <img
-                  className={styles.clubImg}
+                  className={styles.clubImaeg}
                   src={
                     typeof club.imageUrl === "string"
                       ? club.imageUrl
@@ -126,10 +118,28 @@ const Club = () => {
               onClick={() => buttonOpenClub(club._id)}
             >
               <div>{club.name}</div>
-              <div className={styles.members}>80 member</div>
+              <div className={styles.members}>
+                {club.followers} {t("members")}
+              </div>
             </div>
           </div>
-          <div className={styles.btn}>{renderActionButton(club)}</div>
+          <div className={styles.btn}>
+            {club.author === currentUser ? (
+              <button
+                className={styles.btnSub}
+                onClick={() => moveToAddPost(club.name)}
+              >
+                Add Post
+              </button>
+            ) : (
+              <button
+                className={styles.btnSub}
+                onClick={() => onSubscribeClick(club)}
+              >
+                {subscriptions[club._id] ? t("unsubscribe") : t("subscribe")}
+              </button>
+            )}
+          </div>
         </div>
       ))}
     </div>

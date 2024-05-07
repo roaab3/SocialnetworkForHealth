@@ -3,4 +3,5 @@ export interface IComments {
   author: string;
   content: string;
   postID: string;
+  createdAt: Date;
 }

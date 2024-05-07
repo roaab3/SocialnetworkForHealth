@@ -23,13 +23,13 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
+  googleID:string;
   posts:  Array<IPosts>;
   clubs: Array<IClubs>;
   clubsSubscribtion: Array<IClubs>;
-  points: Number;
+  points: number;
   type: UserType;
-  imageUrl: string;
-  subscriptions: string;
+  imageUrl?: string | File | undefined;
   interests: Array<string>;
   description: string;
   publicationDate: string; //change
@@ -39,4 +39,5 @@ export interface IUser {
   industry: string;
   position: string;
   friends: Array<string>;
+  followers: Array<string>;
 }

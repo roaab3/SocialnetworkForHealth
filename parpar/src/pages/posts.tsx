@@ -1,6 +1,5 @@
 import Posts from "../components/posts/post/posts";
-import NewPost from "../components/posts/newPost/newPost";
-
+//display register page
 const posts = () => {
   return (
     <div>

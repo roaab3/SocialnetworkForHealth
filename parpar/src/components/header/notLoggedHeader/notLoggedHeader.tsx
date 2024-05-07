@@ -1,70 +1,39 @@
 import { styled, alpha } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
 import styles from "../notLoggedHeader/notLoggedHeader.module.css";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+
+//Component that display unlogged user header
 const NotLoggedHeader = () => {
-  // Function to handle the search
 
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-    color: "#ffffff",
-  }));
+//hanlde change language
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState("eng");
+  const dispatch = useDispatch();
+  const handleChangeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLanguage = e.target.value;
+    localStorage.setItem("language", newLanguage);
+    i18n.changeLanguage(newLanguage);
+    setSelectedLanguage(newLanguage);
+  };
 
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    width: "100%",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      [theme.breakpoints.up("sm")]: {
-        width: "12ch",
-        "&:focus": {
-          width: "20ch",
-        },
-      },
-    },
-  }));
+ 
 
-  const [activeItem, setActiveItem] = useState<string>("");
-  const [selectedLang, setSelectedLang] = useState("Eng");
-  console.log(selectedLang);
+  const [activeItem, setActiveItem] = useState("posts");
   // Function to handle click event on navbar items
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName);
   };
   const navigate = useNavigate();
-
-  const onBtnClickRegister = useCallback(() => {
-    navigate("/register");
-  }, [navigate]);
-
-  const onGroupButtonClick = useCallback(() => {
+// Function to handle login button 
+  const onBtnClickJoinUs = useCallback(() => {
     navigate("/login");
   }, [navigate]);
+
+
+
   return (
     <>
       <div className={styles.headerContainer}>
@@ -76,11 +45,13 @@ const NotLoggedHeader = () => {
             <ul>
               <li
                 style={{
-                  backgroundColor: activeItem === "posts" ? "#5682a4" : "#003366",
+                  backgroundColor:
+                    activeItem === "posts" ? "var(--blue-100)" : " #003366",
+                  color: activeItem === "clubs" ? "var(--blue-100)" : "white",
                 }}
                 onClick={() => handleItemClick("posts")}
               >
-                <Link  to="/">Posts</Link>
+                <Link to="/">{t("posts")}</Link>
               </li>
               <li
                 style={{
@@ -88,7 +59,7 @@ const NotLoggedHeader = () => {
                 }}
                 onClick={() => handleItemClick("clubs")}
               >
-                <Link to="/clubs">Clubs</Link>
+                <Link to="/clubs">{t("clubs")}</Link>
               </li>
               <li
                 style={{
@@ -96,32 +67,24 @@ const NotLoggedHeader = () => {
                 }}
                 onClick={() => handleItemClick("authors")}
               >
-                <Link to="/authors">Authors</Link>
+                <Link to="/authors">{t("authors")}</Link>
               </li>
             </ul>
           </div>
           <div className={styles.contolbtns}>
-            <div className={styles.searchButton}>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </Search>
-            </div>
             <div>
-              <select name="selectedLanguage" defaultValue="Eng" className={styles.selectLanguge}
-              value={selectedLang} // ...force the select's value to match the state variable...
-              onChange={e => setSelectedLang(e.target.value)} 
+              <select
+                name="selectedLanguage"
+                className={styles.selectLanguge}
+                onChange={handleChangeLanguage}
               >
-                <option value="ENG">ENG</option>
-                <option value="HEB">HEB</option>
+                <option value="eng">ENG</option>
+                <option value="heb">HEB</option>
               </select>
             </div>
-            <button className={styles.joinbtn} onClick={onBtnClickRegister}>Join Us</button>
+            <button className={styles.joinbtn} onClick={onBtnClickJoinUs}>
+              {t("join_Us")}
+            </button>
           </div>
         </div>
       </div>
@@ -130,3 +93,11 @@ const NotLoggedHeader = () => {
 };
 
 export default NotLoggedHeader;
+
+function calc(
+  arg0: number,
+  arg1: any,
+  arg2: { theme: import("@mui/material/styles").Theme; "": any }
+) {
+  throw new Error("Function not implemented.");
+}

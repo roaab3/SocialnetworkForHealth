@@ -52,35 +52,24 @@
   width: 95px;
   height: 39px;
   border-radius: 5px;
-  background-color: #5682a4;
+  background-color: #6892B2;
   color: #ffffff;
   font-size: 13px;
   font-family: var(--font-fira-sans);
 }
 
-.selectLanguge {
-  height: 38px;
-  width: 60px;
-  border-radius: 5px;
-  background-color: #ccd1d9;
-  color: #003366;
-  font-size: 15px;
-  font-family: var(--font-fira-sans);
-  text-align: center;
-}
-.selectLanguge option {
-  height: 38px;
-  padding: 5px;
-  border-radius: 0px;
-}
+
+
 /*Add post or club buttun design*/
 .addbtn {
   width: 36px;
   height: 36px;
-  background-color: #5682a4;
+  background-color: #6892B2;
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
+  z-index: 3;
+
 }
 .Openwindow ul {
   color: #5682a4;
@@ -93,20 +82,46 @@
   width: 140px;
   gap: 20px;
   padding-left: 0px;
+  z-index: 3;
+}
+.Openwindow li {
+  width: 140px;/* Set a fixed width for all <li> elements */
 }
 .Openwindow a {
   text-decoration: none;
   color: var(--white-100);
+  background-color: #edebeb;
   padding: 10px;
   margin: 5px 0px;
+  z-index: 3;
+  
 }
+
 .Openwindow a:link,
 .Openwindow a:active {
   color: #5682a4;
-  background-color: #ffffff;
+  background-color: #edebeb;
   padding: 10px;
 }
 .Openwindow a:hover {
+
   background-color: #e6e7e9;
   padding: 10px;
+  width: 130px;
+}
+
+.selectLanguge{
+  height: 38px;
+  width: 60px;
+  border-radius: 5px;
+  background-color: #6892B2;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: var(--font-fira-sans);
+  text-align: center;
+}
+.selectLanguge option {
+  height: 38px;
+  padding: 5px;
+  border-radius: 0px;
 }

@@ -1,7 +1,7 @@
 .postlist {
   position: relative;
   top: 0%;
-  margin: 37px 0px;
+  margin: 45px 0px;
 }
 .card {
   position: relative;
@@ -10,11 +10,33 @@
   font-family: var(--font-fira-sans);
   margin: 10px;
   border-radius: 5px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
+
 .title {
   font-size: var(--font-size-5xl);
   padding: 5px;
+  margin: 5px 0px;
   cursor: pointer;
+  color:var(--dark-blue);
+  font-family: var(--font-fira-sans);
+}
+.containerInfo{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btndelete{
+  width:100px;
+  height: 30px;
+  background-color: #e60000;
+  border: none #e60000;
+  color:#ffffff;
+  font-family:var(--font-fira-sans) ;
+  font-size: 14px;
+  border-radius: 5px;
+  margin: 0px 10px;
 }
 .container {
   padding: 15px;
@@ -22,12 +44,13 @@
 }
 .accountInfo {
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 5px;
   text-align: center;
   font-family: var(--font-cantata-one);
 }
-.imagePro {
+.imagePro,.imageProfile {
   width: 30px;
   height: 30px;
   text-align: center;
@@ -35,6 +58,12 @@
   background-color: var(--color-lightsteelblue);
   padding: 8.5px;
   border-radius: 50%;
+  font-size: 21px;
+}
+.imageProfile{
+  padding: 0px;
+  width: 40px;
+  height: 40px;
 }
 .username {
   padding: 10px 0px;
@@ -49,7 +78,7 @@
 }
 .postImg {
   margin: 5px;
-  height: 220px;
+  height: 220px; 
   width: 745px;
 }
 .pImg {
@@ -87,4 +116,12 @@
 }
 .comment {
   width: 100%;
+}
+.active {
+  background-color: #5682a4;
+}
+
+.linkactive{
+  background-color: var(--blue-100);
+  padding: 20px;
 }

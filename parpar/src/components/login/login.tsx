@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../services/fetchData";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, registerUser } from "../../services/fetchData";
 import { toast } from "react-toastify";
 import styles from "./login.module.css";
 import { Link } from "react-router-dom";
@@ -9,32 +9,34 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../../redux/Slicers";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+
 // Login component
 const Login = () => {
   const dispatch = useDispatch();
+  //handle change language
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState("eng");
+  const handleChangeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLanguage = e.target.value;
+    localStorage.setItem("language", newLanguage);
+    i18n.changeLanguage(newLanguage);
+    setSelectedLanguage(newLanguage);
+  };
   let currentUser = localStorage.getItem("username");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [IsClicked, setIsclick] = useState(false);
+
   const args = {
     username,
     password,
   };
-
+  const UsersArray = useSelector((state: any) => state.currentUser.allUsers);
   const navigate = useNavigate();
   // Function to handle back button
   const onBackButtonClick = useCallback(() => {
     navigate("/");
-  }, [navigate]);
-
-  function onChooselangClick() {
-    setIsclick(!IsClicked);
-  }
-
-  const onDontHaveAnClick = useCallback(() => {
-    navigate("/register");
   }, [navigate]);
 
   // Function to check valid inputs
@@ -57,7 +59,7 @@ const Login = () => {
           if (res) {
             dispatch(setUser(res?.username));
             localStorage.setItem("username", res?.username);
-            navigate("/posts");
+            navigate("/");
           }
         });
       } else {
@@ -70,52 +72,14 @@ const Login = () => {
   };
 
   function HandleLoginwithgoogle(): void {
-    throw new Error("Function not implemented.");
+    //throw new Error("Function not implemented.");
   }
 
   const [userData, setUserData] = useState(null);
   const [profile, setProfile] = useState([]);
-  const loginGoogle = useGoogleLogin({
-    onSuccess: async (response) => {
-      try {
-        const res = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: {
-              Authorization: `Bearer ${response.access_token}`,
-            },
-          }
-        );
-        console.log("Response data:", res.data);
-        setUserData(res.data);
-        console.log("State userData:", userData);
-        if (userData) {
-          const defualtUser = {
-            firstname: `${res.data.given_name}`,
-            lastname: `${res.data.family_name}`,
-            email: `${res.data.email}`,
-            imageUrl: `${res.data.picture}`,
-            username: `${res.data.email}`.substring(
-              0,
-              `${res.data.email}`.indexOf("@")
-            ),
-            googleId: `${res.data.sub}`,
-          };
-          console.log(defualtUser);
-          
-          //console.log("Profile userData:", userData);
-          //navigate("/posts");
-        }
-        // const UserData=res.data;
-        // setUserData(UserData);
-        // console.log(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    onError: (error) => console.log("Login Failed:", error),
-  });
-
+  const [rememberMe, setRememberMe] = useState(false); // State to track "Remember Me" checkbox
+  const [IsClicked, setIsclick] = useState(false);
+  
   return (
     <>
       <div className={styles.page}>
@@ -127,11 +91,18 @@ const Login = () => {
         </div>
         <div className={styles.container}>
           <div className={styles.btncontainer}>
-            <div className={styles.btnback} onClick={onChooselangClick}>
-              {IsClicked ? "Eng" : "HEB"}
+            <div>
+              <select
+                name="selectedLanguage"
+                className={styles.selectLanguge}
+                onChange={handleChangeLanguage}
+              >
+                <option value="eng">ENG</option>
+                <option value="heb">HEB</option>
+              </select>
             </div>
             <div className={styles.btnback} onClick={onBackButtonClick}>
-              Back
+              {t("back")}
             </div>
           </div>
           <div className={styles.centeritem}>
@@ -152,8 +123,9 @@ const Login = () => {
                   <input
                     type="text"
                     className={styles.input}
+                    value={username}
                     name="username"
-                    placeholder="Username"
+                    placeholder={t("username")}
                     onChange={(text) => setUsername(text.target.value)}
                   />
                 </div>
@@ -164,7 +136,7 @@ const Login = () => {
                   <input
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder={t("password")}
                     className={styles.input}
                     onChange={(text) => setPassword(text.target.value)}
                   />
@@ -172,40 +144,21 @@ const Login = () => {
               </form>
             </div>
             <div className={styles.links}>
-              <div>
-                <input type="checkbox" />
-                remember me
-              </div>
-              <div>
+
+              {/* <div>
                 <Link to="/forgot-password" className={styles.forgotPassword}>
-                  Forgot Password?
+                  {t("forgot_password")}?
                 </Link>
-              </div>
+              </div> */}
             </div>
             <button className={styles.btnlogin} onClick={onLoginClicked}>
-              Login
+              {t("login")}
             </button>
             <div className={styles.registeItem}>
-              <div>or continue with</div>
-              <div className={styles.socialContainer}>
-                <img
-                  src="/assets/socialsGoogle.png"
-                  className={styles.imgItem}
-                  onClick={() => loginGoogle()}
-                />
-                <img
-                  src="/assets/socialsfacebook.png"
-                  className={styles.imgItem}
-                />
-                <img
-                  src="/assets/socialstwitter.png"
-                  className={styles.imgItem}
-                />
-              </div>
               <div>
-                Don't have an account?
+                {t("Donthavacc")}?
                 <Link to="/register" className={styles.joinNowlink}>
-                  Join now :)
+                  {t("join_now")} :)
                 </Link>
               </div>
             </div>

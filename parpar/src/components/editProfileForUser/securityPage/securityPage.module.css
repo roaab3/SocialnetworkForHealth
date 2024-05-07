@@ -1,8 +1,10 @@
 .container {
   display: flex;
-  margin: 10px 150px;
+  
+  margin-top: 20px;
 }
 .card {
+  margin: auto;
   width: 970px;
   height: 434px;
   flex-shrink: 0;
@@ -50,7 +52,7 @@
   border-radius: 4px;
   border: 1px solid #f1f1f1;
   background: var(--White-100, #fff);
-  margin: 10px 0px;
+  margin: 5px 0px;
 }
 .fieldsContainer {
   display: flex;
@@ -67,4 +69,12 @@
   background: var(--Dark-Blue, #036);
   color: var(--White-100, #fff);
   margin: 10px 12px;
+}
+.errordiv{
+  display: flex;
+  flex-direction: row;
+  gap:3px;
+  color: rgb(141, 30, 30);
+  align-items: center;
+  margin-left: 5px;
 }

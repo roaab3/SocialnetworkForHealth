@@ -1,30 +1,68 @@
-import styles from "./editClub.module.css"
-import { useState } from "react";
+import styles from "./editClub.module.css";
+import { ChangeEvent, useState } from "react";
 import { IClubs } from "../../../interfaces/clubs";
 import { updateClub } from "../../../services/fetchData";
+import { useTranslation } from "react-i18next";
 
 const initialClub = {
   description: "",
   name: "",
-  imageUrl: "",
+  imageUrl: undefined,
   type: "",
   domain: "",
 };
 
 // Component to edit club settings
 const EditClub = ({ club }: { club: IClubs }) => {
+  const { t, i18n } = useTranslation();
   const [editedClub, seteditedClub] = useState<IClubs>({
     ...initialClub,
     ...club,
   });
 
   // Function to handle input changes and update state
-  const handleInputChange = (fieldName: string, value: string) => {
-    seteditedClub((prevClub) => ({
-      ...prevClub,
-      [fieldName]: value,
-    }));
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        if (reader.readyState === FileReader.DONE) {
+          const result = reader.result;
+          if (result !== null) {
+            resolve(result.toString());
+          } else {
+            reject(new Error("Failed to convert file to Base64"));
+          }
+        }
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
+
+  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, files } = e.target;
+    //enter a file as input for field image (upload)
+    if (name === "imageUrl" && files && files.length > 0) {
+      const selectedFile = files[0];
+      //convert the image file to base64 so we can easy save it in database
+      const base64String = await convertFileToBase64(selectedFile);
+      console.log(base64String);
+      //change imageUrl field value in form
+      seteditedClub((prevData) => ({
+        ...prevData,
+        [name]: base64String,
+      }));
+    } else {
+      //change other field in formdata
+      seteditedClub((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
 
   // Update onSaveClick function to send editedUser instead of user
   const onSaveClick = async () => {
@@ -49,60 +87,85 @@ const EditClub = ({ club }: { club: IClubs }) => {
     <div>
       <div className={styles.container}>
         <div className={styles.card}>
-          <div className={styles.title}> Club Settings</div>
+          <div className={styles.title}> {t("club_settings")}</div>
           <div className={styles.userPhoto}>
-            <div className={styles.profilePhoto}> Club image</div>
+            <div className={styles.profilePhoto}>{t("club_image")}</div>
             <div className={styles.uploadContainer}>
-              <div className={styles.userImage}></div>
+              <div className={styles.userImage}>{club.imageUrl ? (
+                  <img
+                    src={
+                      typeof club.imageUrl === "string"
+                        ? club.imageUrl
+                        : URL.createObjectURL(club.imageUrl)
+                    }
+                    className={styles.userImage} />
+                ):(<img
+                  src="assets/picture_upload.png"
+                  className={styles.image}
+                />)
+                }</div>
               <div className={styles.uploadPhotoContainer}>
-                <div className={styles.uploadPhoto}> Upload photo</div>
+                <div className={styles.uploadPhoto}>
+                  <input
+                    className={styles.upload}
+                    type="file"
+                    placeholder={t("upload_image")}
+                    name="imageUrl"
+                    accept="image/png, image/jpeg"
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div className={styles.userName}>
             <div className={styles.NameContainer}>
-              <div className={styles.name}> Description</div>
+              <div className={styles.name}> {t("description")}</div>
               <input
                 type="text"
+                name="description"
                 className={styles.desContainer}
                 value={editedClub.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-              />
-            </div>
-            <div className={styles.NameContainer}>
-              <div className={styles.name}> club name</div>
-              <input
-                type="text"
-                className={styles.input}
-                value={editedClub.name}
-                onChange={(e) =>
-                  handleInputChange("name", e.target.value)
+                onChange={
+                  handleInputChange
                 }
               />
             </div>
             <div className={styles.NameContainer}>
-              <div className={styles.name}> Type</div>
+              <div className={styles.name}> {t("club_name")}</div>
               <input
                 type="text"
+                name="name"
+                className={styles.input}
+                value={editedClub.name}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.NameContainer}>
+              <div className={styles.name}>{t("type")}</div>
+              <input
+                type="text"
+                name="type"
                 className={styles.input}
                 value={editedClub.type}
-                onChange={(e) => handleInputChange("type", e.target.value)}
+                onChange={handleInputChange}
               />
             </div>
 
             <div className={styles.NameContainer}>
-              <div className={styles.name}> Domain</div>
+              <div className={styles.name}>{t("domain")}</div>
               <input
                 type="text"
+                name="domain"
                 className={styles.input}
                 value={editedClub.domain}
-                onChange={(e) => handleInputChange("domain", e.target.value)}
+                onChange={handleInputChange}
               />
             </div>
 
             <div className={styles.infoContainer}>
               <button className={styles.saveButton} onClick={onSaveClick}>
-                Save
+                {t("save")}
               </button>
             </div>
           </div>
